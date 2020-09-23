@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 from black import img_black
 from blurred import img_blurred
 from brightness import img_brightness
@@ -10,8 +11,9 @@ from sharpness import img_sharpness
 from white import img_white
 
 
-from rotazione import img_rotazione
+from rotazione import img_rotazione, folder_rotazione
 from traslazione import img_traslata
+from ridimenzionare import img_scaling
 
 from Flare import img_flare
 from ColorTemperature import img_colorTemperature
@@ -19,7 +21,12 @@ from ColorTemperature import img_colorTemperature
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--immagine', help="immagine da elavorare")
+    group_img = parser.add_mutually_exclusive_group()
+    group_img.add_argument('--immagine', help="immagine da elavorare")
+    group_img.add_argument('--folder', type=Path, help="immagini da elavorare")
+    
+    parser.add_argument("--save", type=Path )
+   
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--black', action='store_true', help="immagine completamente nero")
     group.add_argument('--blurred', action='store_true',help="immagine sfocato")
@@ -33,17 +40,15 @@ if __name__ == '__main__':
     
     group.add_argument('--rotazione', action='store_true',help="immagine ruotato")
     group.add_argument('--traslazione', action='store_true',help="immagine traslato")
-    group.add_argument('--flare', action='store_true',help="immagine con flare")
+    group.add_argument('--scaling', action='store_true',help="immagine ridimenzionato")
     
-    
-    
+    group.add_argument('--flare', action='store_true',help="immagine con flare")  
     group.add_argument('--temperatura', action='store_true',help="immagine traslato")
     
     group.add_argument('--all', action='store_true',help="tutte le elavorazioni")
     
     group1 = parser.add_mutually_exclusive_group()
-    
-    group1.add_argument('--value1', type=float, default=0, help="valore per alcune elavorazioni")
+    group1.add_argument('--value1', type=float , default=0, help="valore per alcune elavorazioni")
     group1.add_argument('--immagine1', help="immagine da elavorare" )
     
     parser.add_argument('--value2', type=float, default=0, help="valore per alcune elavorazioni")
@@ -71,10 +76,15 @@ if __name__ == '__main__':
     
     
     elif args.rotazione:
-        img_rotazione(args.immagine, args.value1)
+        if args.folder:
+            folder_rotazione(args.folder,args.save,args.value1)
+        else:    
+            img_rotazione(args.immagine,args.save , args.value1)
     elif args.traslazione:
         img_traslata(args.immagine, args.value1,args.value2)
-        
+    elif args.scaling:
+        img_scaling(args.immagine, args.value1)
+    
     
     elif args.flare:
         img_flare(args.immagine, args.immagine1)
