@@ -1,6 +1,9 @@
 from matplotlib import pyplot as plt
 from PIL import Image
 import math
+import os
+
+name = "Fallimento_COLOR_TEMPERATURE"
 
 def convert_K_to_RGB(colour_temperature):
     """
@@ -62,19 +65,21 @@ def convert_K_to_RGB(colour_temperature):
     return red, green, blue
 
 
-def img_colorTemperature(immagine,value):
-    picture1=Image.open((immagine))
-    picture = Image.open(immagine)
-    
+def img_colorTemperature(immagine,save,value):
+    imgCT = Image.open(immagine)
     r,g,b=convert_K_to_RGB(value)
     color_matrix = (r / 255.0, 0.0, 0.0, 0.0, 0.0, g / 255.0, 0.0, 0.0, 0.0, 0.0, b / 255.0, 0.0)  
-    picture=picture.convert('RGB',color_matrix)     
+    imgCT=imgCT.convert('RGB', color_matrix)
+    i = 1
+    while os.path.exists(os.path.join(save, name+str(i)+".png")):
+        i+=1       
+    imgCT.save(os.path.join(save, name+str(i)+".png"),"PNG")
+
+
+def folder_colorTemperature(path, save, value):
+    temp =os.listdir(path)
+    for img in temp:
+        if (img.endswith('png') or img.endswith('jpg') ):
+            img_colorTemperature(os.path.join(path, img), save, value) 
     
-    plt.figure(num='Fallimento Color Temperature')
-    plt.subplot(121),plt.imshow(picture1),plt.title('Originale')
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(picture),plt.title('Color Temperature')
-    plt.xticks([]), plt.yticks([])
-    plt.show()
-
-
+        

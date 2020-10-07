@@ -1,8 +1,9 @@
+import os
 from PIL import Image
-from matplotlib import pyplot as plt
 
-def img_black(immagine):
-    picture1 = Image.open(immagine)
+name = "Fallimento_BLACK"
+
+def img_black(immagine,save):
     picture = Image.open(immagine)
     
     pixels = picture.load()
@@ -10,18 +11,14 @@ def img_black(immagine):
     
     for i in range(0,width):
         for j in range(0,height):
-            pixels[i,j] = (0, 0, 0)
-    
-    #picture e picture1 --> <class 'PIL.JpegImagePlugin.JpegImageFile'>
-    
-    #il codice sotto serve come presentazione per mostrare il fallimento
-    plt.figure(num='Fallimento BLACK')
-    plt.subplot(121),plt.imshow(picture1),plt.title('Originale')
-    plt.xticks([]), plt.yticks([])
-    picture1.show()
-    plt.subplot(122),plt.imshow(picture),plt.title('Black')
-    plt.xticks([]), plt.yticks([])
-    plt.show()
+            pixels[i,j] = (0, 0, 0)      
+    i = 1
+    while os.path.exists(os.path.join(save, name+str(i)+".png")):
+        i+=1       
+    picture.save(os.path.join(save, name+str(i)+".png"),"PNG")
 
-
-#ok
+def folder_black(path, save):
+    temp =os.listdir(path)
+    for img in temp:
+        if (img.endswith('png') or img.endswith('jpg') ):
+            img_black(os.path.join(path, img), save)

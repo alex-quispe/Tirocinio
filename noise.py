@@ -1,8 +1,10 @@
+import os
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 
-def img_noise(immagine):
+name = "Fallimento_NOISE"
+
+def img_noise(immagine,save):
     img = cv2.imread(immagine)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
@@ -18,12 +20,13 @@ def img_noise(immagine):
     gauss = np.random.normal(0,1,img.size)
     gauss = gauss.reshape(img.shape[0],img.shape[1],img.shape[2]).astype('uint8')
     noise = img + img * gauss
-    
-    plt.figure(num='Fallimento NOISE')
-    plt.subplot(121),plt.imshow(img),plt.title('Originale')
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(noise),plt.title('Noise')
-    plt.xticks([]), plt.yticks([])
-    plt.show()
+    i = 1
+    while os.path.exists(os.path.join(save, name+str(i)+".png")):
+        i+=1       
+    cv2.imwrite(os.path.join(save, name+str(i)+".png"),noise)
 
-#ok
+def folder_noise(path, save):
+    temp =os.listdir(path)
+    for img in temp:
+        if (img.endswith('png') or img.endswith('jpg') ):
+            img_noise(os.path.join(path, img), save)

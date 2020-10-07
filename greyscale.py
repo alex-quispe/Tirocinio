@@ -1,21 +1,17 @@
-import numpy as np
-import cv2
+import os
 from PIL import Image
-from matplotlib import pyplot as plt
 
-def img_greyscale(immagine):
-    img = cv2.imread(immagine)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    
+name = "Fallimento_NOISE"
+
+def img_greyscale(immagine,save):  
     gray = Image.open(immagine).convert('LA')
-    # in alcuni casi .convert('LA') potrebbe non funzionare e l'altra conversione
-    # che ho utilizzato è .convert('L')
-    
-    plt.figure(num='Fallimento NO BAYER FILTER')
-    plt.subplot(121),plt.imshow(img),plt.title('Originale')
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(gray),plt.title('Scala di Grigi')
-    plt.xticks([]), plt.yticks([])
-    plt.show()
+    i = 1
+    while os.path.exists(os.path.join(save, name+str(i)+".png")):
+        i+=1       
+    gray.save(os.path.join(save, name+str(i)+".png"),"PNG")
 
-#ok
+def folder_greyscale(path, save):
+    temp =os.listdir(path)
+    for img in temp:
+        if (img.endswith('png') or img.endswith('jpg') ):
+            img_greyscale(os.path.join(path, img), save)

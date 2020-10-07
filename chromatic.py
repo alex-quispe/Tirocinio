@@ -9,13 +9,13 @@ Use the command line interface to add chromatic abberation and
 lens blur to your images, or import some of the functions below.
 
 """
-
+import os
 from PIL import Image
 import numpy as np
 import math
 from typing import List
 
-from matplotlib import pyplot as plt
+name = "Fallimento_CHROMATIC"
 
 def cartesian_to_polar(data: np.ndarray) -> np.ndarray:
     """Returns the polar form of <data>
@@ -291,33 +291,7 @@ def blend_images(im, og_im, alpha: float = 1, strength: float = 1):
     return final_im
 
 
-
-
-if __name__ == '__main__':
-    '''
-    import argparse
-    parser = argparse.ArgumentParser(
-        description="Apply chromatic aberration and lens blur to images")
-    parser.add_argument("filename", help="input filename")
-    parser.add_argument("-s", "--strength", type=float, default=1.0,
-                        help="set blur/aberration strength, defaults to 1.0")
-    parser.add_argument("-j", "--jitter", type=int, default=0,
-                        help="set color channel offset pixels, defaults to 0")
-    parser.add_argument("-y", "--overlay", type=float, default=0.0,
-                        help="alpha of original image overlay, defaults to 0.0")
-    parser.add_argument(
-        "-n", "--noblur", help="disable radial blur", action="store_true")
-    parser.add_argument(
-        "-o", "--out", help="write to OUTPUT (supports multiple formats)")
-    parser.add_argument(
-        '-v', '--verbose', help="print status messages", action="store_true")
-    args = parser.parse_args()
-
-    ifile = args.filename
-    im = Image.open(ifile)
-    im1 = Image.open(ifile)
-    '''
-def img_chromatic(immagine, valore):
+def img_chromatic(immagine,save,valore):
     im = Image.open(immagine)
 
     # Ensure width and height are odd numbers
@@ -329,19 +303,18 @@ def img_chromatic(immagine, valore):
             im = im.crop((0, 0, im.size[0], im.size[1] - 1))
             im.load()
 
-    og_im = im.copy()
-    img = Image.open(immagine)
     im = add_chromatic(im, strength=valore, no_blur=True)# metodo da invocare per aggiungere effetto
     #modificare i valori per ottenere effetti più o meno calcati (vedere descrizione sotto il metodo)
 
     # im --> <class 'PIL.Image.Image'>
     # img --> <class 'PIL.JpegImagePlugin.JpegImageFile'>
-
-    plt.figure(num='Fallimento NO CHROMATIC ABERRATION CORRECTION')
-    plt.subplot(121),plt.imshow(img),plt.title('Originale')
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(122),plt.imshow(im),plt.title('No Chromatic Aberration Correction')
-    plt.xticks([]), plt.yticks([])
-    plt.show()
-
-    #ok
+    i = 1
+    while os.path.exists(os.path.join(save, name+str(i)+".png")):
+        i+=1       
+    im.save(os.path.join(save, name+str(i)+".png"),"PNG")
+    
+def folder_chromatic(path, save, valore):
+    temp =os.listdir(path)
+    for img in temp:
+        if (img.endswith('png') or img.endswith('jpg') ):
+            img_chromatic(os.path.join(path, img), save, valore)

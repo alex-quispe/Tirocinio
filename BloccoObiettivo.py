@@ -1,14 +1,14 @@
 import os
 from PIL import Image
 
-name = "Fallimento_FLARE"
+name = "Fallimento_PARZIALE_APERTURA_OBIETTIVO"
 
-def img_flare(immagine,save,imgFlare):
+def img_bloccoObiettivo(immagine,save,imgObiettivo):
    #per sovrapporre un'immagine con sfondo trasparente ad un'immagine esistente
    img = Image.open(immagine)
-   imgF = Image.open(imgFlare).convert("RGBA")
-   imgF=imgF.resize(img.size)
-   img.paste(imgF,(0,0),imgF)
+   imgO = Image.open(imgObiettivo).convert("RGBA")
+   imgO=imgO.resize(img.size)
+   img.paste(imgO,(0,0),imgO)
    i = 1
    while os.path.exists(os.path.join(save, name+str(i)+".png")):
        i+=1       
@@ -23,12 +23,8 @@ def img_flare(immagine,save,imgFlare):
    immagineFinale=enhancer.enhance(1.5)'''
     
    
-def folder_flare(path, save, imgFlare):
-    print(path)
-    temp = os.listdir(path)
+def folder_bloccoObiettivo(path, save, imgObiettivo):
+    temp =os.listdir(path)
     for img in temp:
         if (img.endswith('png') or img.endswith('jpg') ):
-            print(path)
-            print(img)
-            img_flare(os.path.join(path,img), save, imgFlare) 
-            
+            img_bloccoObiettivo(os.path.join(path, img), save, imgObiettivo) 
